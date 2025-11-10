@@ -179,10 +179,10 @@ def get_callbacks(model_save_path='models/asl_model.h5'):
             verbose=1
         ),
         
-        # Stop training if validation accuracy doesn't improve for 10 epochs
+        # Stop training if validation accuracy doesn't improve for 15 epochs (increased from 10)
         EarlyStopping(
             monitor='val_accuracy',
-            patience=10,
+            patience=15,
             restore_best_weights=True,
             verbose=1
         ),

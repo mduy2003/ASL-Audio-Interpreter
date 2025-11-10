@@ -190,13 +190,14 @@ class ASLDataLoader:
         y_train_cat = to_categorical(y_train, num_classes=self.num_classes)
         y_val_cat = to_categorical(y_val, num_classes=self.num_classes)
         
-        # Data augmentation for training
+        # Data augmentation for training - REDUCED for better learning
+        # Too much augmentation can make it harder for the model to learn
         train_datagen = ImageDataGenerator(
-            rotation_range=15,          # Rotate images by up to 15 degrees
-            width_shift_range=0.1,      # Shift images horizontally by 10%
-            height_shift_range=0.1,     # Shift images vertically by 10%
-            zoom_range=0.1,             # Zoom in/out by 10%
-            horizontal_flip=True,       # Flip images horizontally
+            rotation_range=10,          # Rotate images by up to 10 degrees (reduced from 15)
+            width_shift_range=0.08,     # Shift images horizontally by 8% (reduced from 10%)
+            height_shift_range=0.08,    # Shift images vertically by 8% (reduced from 10%)
+            zoom_range=0.08,            # Zoom in/out by 8% (reduced from 10%)
+            horizontal_flip=False,      # NO horizontal flip for ASL (signs are not symmetric!)
             fill_mode='nearest'         # Fill empty pixels after transformations
         )
         
