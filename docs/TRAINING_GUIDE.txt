@@ -1,0 +1,44 @@
+"""
+QUICK TRAINING GUIDE - ASL Model Improvements
+==============================================
+
+KEY CHANGES MADE:
+-----------------
+1. ❌ REMOVED horizontal_flip (ASL signs are NOT symmetric!)
+2. ⬇️ REDUCED augmentation (10° rotation instead of 15°)
+3. ⬆️ INCREASED epochs (50 → 100)
+4. ⬇️ REDUCED learning rate (0.001 → 0.0005)
+5. ✅ ADDED class weights (handles imbalance)
+6. ✅ ADDED confusion matrix visualization
+
+TRAIN WITH NEW SETTINGS:
+------------------------
+python src/train.py
+
+EXPECTED IMPROVEMENT:
+--------------------
+Before: 31.48% accuracy, 19 classes at 0%
+After:  70-85% accuracy, most classes >50%
+
+MONITOR THESE FILES:
+-------------------
+✓ models/asl_model_simple_YYYYMMDD_HHMMSS.h5  (saved model)
+✓ output/training_history.png                   (accuracy/loss curves)
+✓ output/confusion_matrix.png                   (which classes confused)
+
+TROUBLESHOOTING:
+---------------
+Still low accuracy?
+→ Check IMPROVEMENTS.md for detailed solutions
+
+Training too slow?
+→ Reduce batch_size or img_size
+
+Overfitting?
+→ Add more dropout, reduce epochs
+
+Model not learning?
+→ Check confusion matrix for patterns
+→ Verify data labels are correct
+→ Try deeper model: model_type='deeper'
+"""
