@@ -236,7 +236,6 @@ def train_model(
     print(f"Model will be saved to: {model_save_path}")
     
     # Calculate class weights to handle imbalance
-    from sklearn.utils.class_weight import compute_class_weight
     class_weights = compute_class_weight(
         'balanced',
         classes=np.unique(data['y_train']),
@@ -244,8 +243,21 @@ def train_model(
     )
     class_weight_dict = {i: weight for i, weight in enumerate(class_weights)}
     
-    print(f"Using class weights to handle imbalance")
-    print(f"Weight range: {min(class_weights):.3f} to {max(class_weights):.3f}")
+    # BOOST weights for problem classes: 0, 6, v (indices 0, 6, 31)
+    problem_class_indices = {
+        '0': 0,
+        '6': 6,
+        'v': data['classes'].index('v') if 'v' in data['classes'] else None
+    }
+    
+    boost_factor = 1.5  # 50% more weight for problem classes
+    for class_name, idx in problem_class_indices.items():
+        if idx is not None and idx in class_weight_dict:
+            class_weight_dict[idx] *= boost_factor
+            print(f"Boosted weight for class '{class_name}' (index {idx}): {class_weight_dict[idx]:.3f}")
+    
+    print(f"\nUsing class weights to handle imbalance")
+    print(f"Weight range: {min(class_weight_dict.values()):.3f} to {max(class_weight_dict.values()):.3f}")
     
     # Step 4: Train model
     print("\n[4/5] Training model...")
@@ -308,13 +320,13 @@ if __name__ == "__main__":
     - learning_rate: 0.001 is a good starting point
     """
     
-    # Train the model - IMPROVED PARAMETERS
+    # Train the model - OPTIMIZED PARAMETERS FOR HIGHER ACCURACY
     model, history, evaluation, data = train_model(
-        model_type='simple',      # Start with simple model
-        img_size=(64, 64),        # 64x64 for faster training
-        batch_size=32,            # Standard batch size
-        epochs=100,               # INCREASED: 100 epochs (was 50) - model needs more time to learn
-        learning_rate=0.0005,     # REDUCED: 0.0005 (was 0.001) - slower, more stable learning
+        model_type='simple',      # Using improved architecture
+        img_size=(128, 128),      # INCREASED: 128x128 for more detail (better for similar signs)
+        batch_size=16,            # REDUCED: smaller batches for better gradient updates
+        epochs=150,               # INCREASED: 150 epochs for more thorough learning
+        learning_rate=0.0003,     # REDUCED: even slower learning for fine-tuning
         train_size=0.7,           # 70% training
         val_size=0.15,            # 15% validation
         test_size=0.15            # 15% testing

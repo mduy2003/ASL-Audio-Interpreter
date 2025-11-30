@@ -33,9 +33,9 @@ except ImportError:
 
 def create_simple_cnn(input_shape=(64, 64, 3), num_classes=36):
     """
-    Create a simple CNN model for ASL classification
+    Create an improved CNN model for ASL classification
     
-    This is a good starting point - simple but effective architecture.
+    Enhanced architecture with increased capacity for better accuracy.
     
     Args:
         input_shape (tuple): Shape of input images (height, width, channels)
@@ -45,34 +45,45 @@ def create_simple_cnn(input_shape=(64, 64, 3), num_classes=36):
         Sequential: Compiled Keras model
     """
     model = Sequential([
-        # First Convolutional Block
-        Conv2D(32, (3, 3), activation='relu', input_shape=input_shape, padding='same'),
-        BatchNormalization(),
-        MaxPooling2D((2, 2)),
-        Dropout(0.25),
-        
-        # Second Convolutional Block
+        # First Convolutional Block - INCREASED filters to 64
+        Conv2D(64, (3, 3), activation='relu', input_shape=input_shape, padding='same'),
         Conv2D(64, (3, 3), activation='relu', padding='same'),
         BatchNormalization(),
         MaxPooling2D((2, 2)),
         Dropout(0.25),
         
-        # Third Convolutional Block
+        # Second Convolutional Block - INCREASED filters to 128
+        Conv2D(128, (3, 3), activation='relu', padding='same'),
         Conv2D(128, (3, 3), activation='relu', padding='same'),
         BatchNormalization(),
         MaxPooling2D((2, 2)),
         Dropout(0.25),
         
-        # Flatten and Dense Layers
+        # Third Convolutional Block - INCREASED filters to 256
+        Conv2D(256, (3, 3), activation='relu', padding='same'),
+        Conv2D(256, (3, 3), activation='relu', padding='same'),
+        BatchNormalization(),
+        MaxPooling2D((2, 2)),
+        Dropout(0.3),
+        
+        # Fourth Convolutional Block - NEW for better feature extraction
+        Conv2D(512, (3, 3), activation='relu', padding='same'),
+        BatchNormalization(),
+        MaxPooling2D((2, 2)),
+        Dropout(0.3),
+        
+        # Flatten and Dense Layers - INCREASED capacity
         Flatten(),
-        Dense(256, activation='relu'),
+        Dense(512, activation='relu'),
+        BatchNormalization(),
         Dropout(0.5),
-        Dense(128, activation='relu'),
+        Dense(256, activation='relu'),
+        BatchNormalization(),
         Dropout(0.5),
         
         # Output Layer
         Dense(num_classes, activation='softmax')
-    ], name='simple_asl_cnn')
+    ], name='improved_asl_cnn')
     
     return model
 
@@ -179,10 +190,10 @@ def get_callbacks(model_save_path='models/asl_model.h5'):
             verbose=1
         ),
         
-        # Stop training if validation accuracy doesn't improve for 15 epochs (increased from 10)
+        # Stop training if validation accuracy doesn't improve for 20 epochs
         EarlyStopping(
             monitor='val_accuracy',
-            patience=15,
+            patience=20,
             restore_best_weights=True,
             verbose=1
         ),
