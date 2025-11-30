@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Model files (optional - uncomment if you don't want to track large model files)
+# *.h5
+# *.keras
+
+# Output files (optional - uncomment if regenerated each time)
+# output/*.png
+# output/*.jpg
+
+# Data (optional - uncomment if dataset is too large)
+# data/asl_dataset/
+
+# Temporary files
+*.log
+*.tmp
